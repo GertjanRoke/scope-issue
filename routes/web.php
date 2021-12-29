@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Item;
 use App\Models\Category;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -18,13 +19,52 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 Route::get('/', function () {
     DB::enableQueryLog();
 
-    Category::with([
-        'items' => function (HasMany $query) {
-            $query->select([
-                'name',
-            ]);
-        },
-    ])
+    Item::query()
+        ->select([
+            'items.id',
+            'name',
+        ])
+        ->get();
+
+    Item::query()
+        ->applyScopes()
+        ->withoutGlobalScope('sort')
+        ->select([
+            'items.id',
+            'name',
+        ])
+        ->get();
+
+    Category::query()
+        ->with([
+            'items' => function (HasMany $query) {
+                $query
+                    ->applyScopes()
+                    ->withoutGlobalScope('sort')
+                    ->select([
+                        'name',
+                    ]);
+            },
+        ])
+        ->select([
+            'id',
+            'name',
+        ])
+        ->get();
+
+    Category::query()
+        ->with([
+            'items' => function (HasMany $query) {
+                $query
+                    ->select([
+                        'name',
+                    ]);
+            },
+        ])
+        ->select([
+            'id',
+            'name',
+        ])
         ->get();
 
     return DB::getQueryLog();

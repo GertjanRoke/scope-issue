@@ -5,6 +5,7 @@
 3. `composer install`
 4. `cp .env.example .env`
 5. `php artisan key:generate`
+5. `php artisan sail:install --with=mysql`
 6. `./vendor/bin/sail up`
 7. `./vendor/bin/sail artisan migrate --seed`
 
